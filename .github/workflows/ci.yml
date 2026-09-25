@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: windows-latest
+    env:
+      PYTHONUTF8: "1"  # belt-and-suspenders: code already forces UTF-8 stdout, this covers the whole job
     steps:
       - uses: actions/checkout@v4
 

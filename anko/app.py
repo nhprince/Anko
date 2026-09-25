@@ -14,6 +14,15 @@ def resource_path(rel: str) -> str:
 
 
 def run(argv=None) -> int:
+    # Windows consoles (and some CI runners) default stdout/stderr to a legacy codepage
+    # (cp1252) that can't encode characters like √ or π; force UTF-8, and if even that
+    # somehow isn't available, replace unencodable characters rather than crash.
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
+
     from PySide6.QtCore import Qt
     from PySide6.QtGui import QFont, QIcon
     from PySide6.QtWidgets import QApplication
