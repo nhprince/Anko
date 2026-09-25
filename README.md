@@ -67,3 +67,14 @@ pyinstaller anko.spec --noconfirm --clean
 ```
 Produces `dist\Anko\Anko.exe` (a folder build — fast startup). For a single-file exe:
 `set ANKO_ONEFILE=1` before running PyInstaller (slower to start, one `Anko.exe`).
+
+## Build the installer (Windows, wizard-based .exe)
+Requires [Inno Setup](https://jrsoftware.org/isdl.php) (free) and a folder build from the
+step above (`dist\Anko\Anko.exe` must exist — the installer packages that whole folder).
+```
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\anko.iss
+```
+or open `installer\anko.iss` in the Inno Setup Compiler GUI and click **Build**.
+Produces `installer\output\AnkoSetup-1.0.0.exe` — a normal Next/Next/Finish installer that
+adds Start Menu and (optional) Desktop shortcuts and registers an uninstaller in
+*Settings → Apps*. Bump `MyAppVersion` in `installer\anko.iss` for each release.
