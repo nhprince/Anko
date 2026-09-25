@@ -22,6 +22,11 @@ def run(argv=None) -> int:
     selftest = "--selftest" in argv
     if selftest:
         os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+        # Never touch (or be affected by) a real saved session: give this run its own
+        # throwaway data directory so the check is deterministic regardless of what
+        # settings a previous run left behind.
+        import tempfile
+        os.environ["ANKO_DATA_DIR"] = tempfile.mkdtemp(prefix="anko_selftest_")
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     app = QApplication(argv)
     app.setApplicationName("Anko")
@@ -36,6 +41,8 @@ def run(argv=None) -> int:
     w = MainWindow()
     w.setWindowIcon(icon)
     if selftest:
+        from .core.interp import Settings
+        w.apply_settings(Settings())  # known-default angle/notation/style, ignoring any loaded session
         pg = w.pages["calc"]
         pg.editor.insert_text("sqrt(8)+sin(30)")
         w.on_action("cmd:eq")

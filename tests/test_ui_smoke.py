@@ -2,7 +2,9 @@
 import os, sys, shutil
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-os.environ["HOME"] = "/tmp/anko_test_home"
+import tempfile
+os.environ["ANKO_DATA_DIR"] = os.path.join(tempfile.gettempdir(), "anko_test_home")  # isolates session.json, cross-platform
+os.environ["HOME"] = "/tmp/anko_test_home"  # harmless leftover for posix; ANKO_DATA_DIR above is what actually isolates it
 shutil.rmtree("/tmp/anko_test_home", ignore_errors=True)
 from PySide6.QtWidgets import QApplication
 from anko.ui.window import MainWindow

@@ -32,6 +32,14 @@ PREFIX_ANS = {"+", "×", "÷", "!", "%", "nPr", "nCr"}
 
 
 def data_dir() -> Path:
+    # ANKO_DATA_DIR overrides on every OS (used by the test suite to avoid touching a
+    # real user's saved settings); without it, Windows uses APPDATA and everything
+    # else uses ~/.config, as before.
+    override = os.environ.get("ANKO_DATA_DIR")
+    if override:
+        d = Path(override) / APP_NAME
+        d.mkdir(parents=True, exist_ok=True)
+        return d
     base = os.environ.get("APPDATA") if os.name == "nt" else None
     root = Path(base) if base else Path.home() / ".config"
     d = root / APP_NAME

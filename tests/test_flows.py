@@ -1,8 +1,11 @@
 import os, sys, shutil
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
-os.environ["HOME"] = "/tmp/anko_flow_home"
-shutil.rmtree("/tmp/anko_flow_home", ignore_errors=True)
+import tempfile
+_data_dir = os.path.join(tempfile.gettempdir(), "anko_flow_home")
+os.environ["ANKO_DATA_DIR"] = _data_dir  # isolates session.json, cross-platform
+os.environ["HOME"] = "/tmp/anko_flow_home"  # harmless leftover for posix
+shutil.rmtree(_data_dir, ignore_errors=True)
 from fractions import Fraction as F
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import QTimer
