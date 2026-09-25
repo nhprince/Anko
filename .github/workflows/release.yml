@@ -1,0 +1,65 @@
+name: Release
+
+# Triggers on any tag that looks like a version, e.g. v1.0.1
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Strip leading 'v' from tag for version numbers
+        id: ver
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}" -replace '^v', ''
+          echo "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Run test suite
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          python tests/test_engine.py
+          python tests/test_ui_smoke.py
+          python tests/test_flows.py
+          python main.py --selftest
+
+      - name: Generate icon
+        run: python tools/make_icon.py
+
+      - name: Build with PyInstaller
+        run: pyinstaller anko.spec --noconfirm --clean
+
+      - name: Zip the portable build
+        shell: pwsh
+        run: Compress-Archive -Path dist\Anko\* -DestinationPath Anko-windows-${{ steps.ver.outputs.version }}.zip
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build the installer
+        shell: pwsh
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion=${{ steps.ver.outputs.version }} installer\anko.iss
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Anko-windows-${{ steps.ver.outputs.version }}.zip
+            installer/output/AnkoSetup-${{ steps.ver.outputs.version }}.exe
+          generate_release_notes: true

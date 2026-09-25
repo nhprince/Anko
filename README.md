@@ -1,5 +1,9 @@
 # Anko — a real scientific calculator, on your desktop
 
+[![CI](https://github.com/nhprince/Anko/actions/workflows/ci.yml/badge.svg)](https://github.com/nhprince/Anko/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/nhprince/Anko)](https://github.com/nhprince/Anko/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A from-scratch GUI scientific calculator in the spirit of the Casio fx-991CW: natural
 textbook display (stacked fractions, roots, superscripts), SHIFT/ALPHA keypad, exact
 results (fractions, √, π kept symbolic instead of rounded to decimal), and 13 calculation
@@ -51,6 +55,10 @@ and restored on next launch.
 - `dialogs.py` — Apps menu, Settings, Catalog, Constants (CODATA), CALC/SOLVE prompts,
   matrix/vector editor
 - `window.py` — main window, LCD chrome, key-action routing, persistence
+
+## Contributing
+Bug reports, feature requests, and PRs are welcome — see `CONTRIBUTING.md`. This is a
+side project maintained as time allows.
 
 ## Tests
 ```

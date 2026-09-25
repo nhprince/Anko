@@ -6,8 +6,10 @@
 ;       "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\anko.iss
 ; 3. Output: installer\output\AnkoSetup-<version>.exe
 
+#ifndef MyAppVersion
+  #define MyAppVersion "1.0.0"
+#endif
 #define MyAppName "Anko"
-#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Anko"
 #define MyAppExeName "Anko.exe"
 #define MyAppURL "https://github.com/nhprince/Anko"
